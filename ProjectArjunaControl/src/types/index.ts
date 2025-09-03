@@ -85,6 +85,8 @@ export type MainTabParamList = {
   Dashboard: undefined;
   NewMission: undefined;
   LiveTracking: undefined;
+  Analytics: undefined;
+  RouteOptimization: undefined;
   Profile: undefined;
 };
 
