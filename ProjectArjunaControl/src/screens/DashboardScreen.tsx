@@ -8,10 +8,13 @@ import {
   StatusBar,
   SafeAreaView,
   RefreshControl,
+  Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 import { Colors, Typography, Spacing, Layout } from '../constants';
 import { useAuth } from '../hooks/useAuth';
+import { NotificationService } from '../services/notificationService';
 import { useMissions } from '../hooks/useMissions';
 
 interface MissionStatsProps {
@@ -101,6 +104,7 @@ const RecentMissionItem: React.FC<RecentMissionProps> = ({
 export const DashboardScreen: React.FC = () => {
   const { user } = useAuth();
   const { missions, stats, loading, error, loadMissions } = useMissions();
+  const navigation = useNavigation();
 
   // Convert missions to recent missions format
   const recentMissions: RecentMissionProps[] = missions.slice(0, 3).map(mission => ({
@@ -130,7 +134,72 @@ export const DashboardScreen: React.FC = () => {
 
   const handleNewMission = () => {
     // Navigate to new mission screen
-    console.log('New mission pressed');
+    navigation.navigate('NewMission' as never);
+  };
+
+  // Emergency control handlers
+  const handleEmergencyAlert = async () => {
+    try {
+      await NotificationService.notifyEmergency(
+        'emergency-alert',
+        'All active missions have been flagged for emergency attention.'
+      );
+      Alert.alert('Emergency Alert', 'Emergency alert has been sent to all rescue teams.');
+    } catch (error) {
+      console.error('Emergency alert failed:', error);
+      Alert.alert('Error', 'Failed to send emergency alert.');
+    }
+  };
+
+  const handleAllStop = async () => {
+    Alert.alert(
+      'All Stop Command',
+      'This will immediately halt all active drone operations. Continue?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'STOP ALL',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await NotificationService.notifyEmergency(
+                'all-stop',
+                'ALL STOP - All drone operations have been immediately halted.'
+              );
+              Alert.alert('All Stop', 'All drone operations have been halted.');
+            } catch (error) {
+              console.error('All stop command failed:', error);
+              Alert.alert('Error', 'Failed to execute all stop command.');
+            }
+          }
+        }
+      ]
+    );
+  };
+
+  const handleReturnToBase = async () => {
+    Alert.alert(
+      'Return to Base',
+      'This will direct all active drones to return to their base locations. Continue?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Return All',
+          onPress: async () => {
+            try {
+              await NotificationService.notifyEmergency(
+                'return-to-base',
+                'Return to Base - All active drones are returning to base locations.'
+              );
+              Alert.alert('Return to Base', 'All drones are returning to base.');
+            } catch (error) {
+              console.error('Return to base command failed:', error);
+              Alert.alert('Error', 'Failed to execute return to base command.');
+            }
+          }
+        }
+      ]
+    );
   };
 
   return (
@@ -193,6 +262,36 @@ export const DashboardScreen: React.FC = () => {
               icon="layers"
               color={Colors.accent}
             />
+          </View>
+        </View>
+
+        {/* Emergency Controls */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Mission Control</Text>
+          <View style={styles.emergencyControls}>
+            <TouchableOpacity 
+              style={styles.emergencyButton}
+              onPress={() => Alert.alert('Emergency Alert', 'Broadcasting emergency alert to all active missions')}
+            >
+              <Ionicons name="warning" size={24} color={Colors.surface} />
+              <Text style={styles.emergencyButtonText}>Emergency Alert</Text>
+            </TouchableOpacity>
+            
+            <TouchableOpacity 
+              style={styles.controlButton}
+              onPress={() => Alert.alert('All Stop', 'Sending stop command to all drones')}
+            >
+              <Ionicons name="stop-circle" size={20} color={Colors.danger} />
+              <Text style={styles.controlButtonText}>All Stop</Text>
+            </TouchableOpacity>
+            
+            <TouchableOpacity 
+              style={styles.controlButton}
+              onPress={() => Alert.alert('Return to Base', 'Commanding all drones to return to base')}
+            >
+              <Ionicons name="home" size={20} color={Colors.secondary} />
+              <Text style={styles.controlButtonText}>Return to Base</Text>
+            </TouchableOpacity>
           </View>
         </View>
 
@@ -433,5 +532,32 @@ const styles = StyleSheet.create({
     color: Colors.textSecondary,
     textAlign: 'center',
     marginTop: Spacing.xs,
+  },
+  emergencyControls: {
+    padding: Spacing.lg,
+    backgroundColor: Colors.surface,
+    marginHorizontal: Spacing.lg,
+    borderRadius: Layout.borderRadius.md,
+    marginBottom: Spacing.lg,
+  },
+  emergencyButtonText: {
+    ...Typography.bodySmall,
+    color: Colors.surface,
+    fontWeight: '600',
+    textAlign: 'center',
+  },
+  controlButton: {
+    backgroundColor: Colors.warning,
+    paddingVertical: Spacing.md,
+    paddingHorizontal: Spacing.lg,
+    borderRadius: Layout.borderRadius.md,
+    marginHorizontal: Spacing.xs,
+    flex: 1,
+    alignItems: 'center',
+  },
+  controlButtonText: {
+    ...Typography.bodySmall,
+    color: Colors.surface,
+    fontWeight: '600',
   },
 });

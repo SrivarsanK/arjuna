@@ -161,6 +161,18 @@ export class MissionService {
     return data;
   }
 
+  // Get mission logs
+  static async getMissionLogs(missionId: string) {
+    const { data, error } = await supabase
+      .from('mission_logs')
+      .select('*')
+      .eq('mission_id', missionId)
+      .order('timestamp', { ascending: false });
+
+    if (error) throw error;
+    return data;
+  }
+
   // Subscribe to mission updates
   static subscribeMissionUpdates(callback: (payload: any) => void) {
     return supabase
