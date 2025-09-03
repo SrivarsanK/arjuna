@@ -1,5 +1,4 @@
 import * as tf from '@tensorflow/tfjs';
-import '@tensorflow/tfjs-react-native';
 import { Mission } from '../types';
 
 export type MissionPriority = 'low' | 'medium' | 'high' | 'emergency';

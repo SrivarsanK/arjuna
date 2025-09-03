@@ -15,6 +15,7 @@ import {
 import { AnalyticsScreen } from '../screens/AnalyticsScreen';
 import { RouteOptimizationScreen } from '../screens/RouteOptimizationScreen';
 import PredictiveAnalyticsScreen from '../screens/PredictiveAnalyticsScreen';
+import GlobalCoordinationScreen from '../screens/GlobalCoordinationScreen';
 
 const Tab = createBottomTabNavigator<MainTabParamList>();
 const Stack = createStackNavigator();
@@ -56,6 +57,9 @@ export const MainTabs: React.FC = () => {
               break;
             case 'RouteOptimization':
               iconName = focused ? 'location' : 'location-outline';
+              break;
+            case 'GlobalCoordination':
+              iconName = focused ? 'globe' : 'globe-outline';
               break;
             case 'Profile':
               iconName = focused ? 'person' : 'person-outline';
@@ -105,6 +109,11 @@ export const MainTabs: React.FC = () => {
         name="RouteOptimization" 
         component={RouteStack}
         options={{ tabBarLabel: 'Routes' }}
+      />
+      <Tab.Screen 
+        name="GlobalCoordination" 
+        component={GlobalCoordinationScreen}
+        options={{ tabBarLabel: 'Global' }}
       />
       <Tab.Screen 
         name="Profile" 

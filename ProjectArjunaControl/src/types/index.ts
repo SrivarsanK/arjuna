@@ -87,6 +87,7 @@ export type MainTabParamList = {
   LiveTracking: undefined;
   Analytics: undefined;
   RouteOptimization: undefined;
+  GlobalCoordination: undefined;
   Profile: undefined;
 };
 
