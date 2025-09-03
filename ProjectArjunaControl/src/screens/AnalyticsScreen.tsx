@@ -11,6 +11,8 @@ import {
   Dimensions,
   Alert,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 import { Colors, Typography, Spacing, Layout } from '../constants';
 import { AnalyticsService, MissionAnalytics, TeamAnalytics, RealTimeMetrics } from '../services/analyticsService';
 import { OfflineDataManager } from '../services/offlineDataManager';
@@ -70,6 +72,7 @@ const ChartBar: React.FC<ChartBarProps> = ({ label, value, maxValue, color = Col
 };
 
 export const AnalyticsScreen: React.FC = () => {
+  const navigation = useNavigation<StackNavigationProp<any>>();
   const [analytics, setAnalytics] = useState<MissionAnalytics | null>(null);
   const [teamAnalytics, setTeamAnalytics] = useState<TeamAnalytics[]>([]);
   const [realTimeMetrics, setRealTimeMetrics] = useState<RealTimeMetrics | null>(null);
@@ -265,11 +268,19 @@ export const AnalyticsScreen: React.FC = () => {
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Mission Analytics</Text>
-        {isOffline && (
-          <View style={styles.offlineIndicator}>
-            <Text style={styles.offlineText}>Offline Mode</Text>
-          </View>
-        )}
+        <View style={styles.headerActions}>
+          <TouchableOpacity 
+            style={styles.aiButton}
+            onPress={() => navigation.navigate('PredictiveAnalytics')}
+          >
+            <Text style={styles.aiButtonText}>🧠 AI Insights</Text>
+          </TouchableOpacity>
+          {isOffline && (
+            <View style={styles.offlineIndicator}>
+              <Text style={styles.offlineText}>Offline</Text>
+            </View>
+          )}
+        </View>
       </View>
 
       {/* Time Range Selector */}
@@ -469,6 +480,22 @@ const styles = StyleSheet.create({
   offlineText: {
     ...Typography.caption,
     color: Colors.surface,
+    fontWeight: '600',
+  },
+  headerActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  aiButton: {
+    backgroundColor: Colors.primary,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 16,
+    marginRight: 8,
+  },
+  aiButtonText: {
+    color: Colors.surface,
+    fontSize: 12,
     fontWeight: '600',
   },
   timeRangeContainer: {

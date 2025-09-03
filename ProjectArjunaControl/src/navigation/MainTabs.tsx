@@ -14,6 +14,7 @@ import {
 } from '../screens/MainScreens';
 import { AnalyticsScreen } from '../screens/AnalyticsScreen';
 import { RouteOptimizationScreen } from '../screens/RouteOptimizationScreen';
+import PredictiveAnalyticsScreen from '../screens/PredictiveAnalyticsScreen';
 
 const Tab = createBottomTabNavigator<MainTabParamList>();
 const Stack = createStackNavigator();
@@ -22,6 +23,7 @@ const Stack = createStackNavigator();
 const AnalyticsStack = () => (
   <Stack.Navigator screenOptions={{ headerShown: false }}>
     <Stack.Screen name="AnalyticsMain" component={AnalyticsScreen} />
+    <Stack.Screen name="PredictiveAnalytics" component={PredictiveAnalyticsScreen} />
   </Stack.Navigator>
 );
 
