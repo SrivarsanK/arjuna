@@ -3,18 +3,10 @@ import { View, Text, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Colors, Typography } from '../constants';
 
-// Temporary placeholder for main app screens
-export const DashboardScreen: React.FC = () => {
-  return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.content}>
-        <Text style={styles.title}>Dashboard</Text>
-        <Text style={styles.subtitle}>Welcome to Project Arjuna Control</Text>
-      </View>
-    </SafeAreaView>
-  );
-};
+// Import the main dashboard
+export { DashboardScreen } from './DashboardScreen';
 
+// Temporary placeholder screens for other tabs
 export const NewMissionScreen: React.FC = () => {
   return (
     <SafeAreaView style={styles.container}>
@@ -61,10 +53,12 @@ const styles = StyleSheet.create({
   },
   title: {
     ...Typography.headerLarge,
-    marginBottom: 8,
+    marginBottom: 10,
+    textAlign: 'center',
   },
   subtitle: {
     ...Typography.body,
+    color: Colors.textSecondary,
     textAlign: 'center',
   },
 });
